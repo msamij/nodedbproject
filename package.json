@@ -1,0 +1,21 @@
+{
+  "name": "nodedbproject",
+  "version": "1.0.0",
+  "description": "nodejsdbproject",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc"
+  },
+  "author": "Muhammad Sami",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.15.5",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "mysql2": "^3.2.0"
+  }
+}
