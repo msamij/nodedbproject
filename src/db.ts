@@ -1,8 +1,9 @@
 import * as mysql from 'mysql2';
+import { RESULT_KEY } from './config';
 import DBConnection from './dbConnection';
 
 export default class DB {
-  private tableName: string = null;
+  private defaultTableName: string = null;
   private connection: mysql.Connection;
 
   /**
@@ -12,7 +13,7 @@ export default class DB {
    */
   constructor(dbConnectionInstance: DBConnection, defaultTableName?: string) {
     this.connection = dbConnectionInstance.getDbConnection();
-    this.tableName = defaultTableName;
+    this.defaultTableName = defaultTableName;
   }
 
   private callback(error: mysql.QueryError, result: any) {
@@ -20,14 +21,26 @@ export default class DB {
     else console.log(result);
   }
 
-  listAllTables(): DB {
+  showAllTables(): DB {
     this.connection.query('SHOW TABLES', this.callback);
     return this;
   }
 
+  /**
+   * DESCRIBE all tables.
+   */
+  showInformationFromAllTables(): DB {
+    this.connection.query('SHOW TABLES', (error: mysql.QueryError, result: any[]) => {
+      const tableNamesList: string[] = [];
+      result.forEach((res: object) => tableNamesList.push(res[RESULT_KEY]));
+      tableNamesList.forEach((tableName: string) => this.showTableInformation(tableName));
+    });
+    return this;
+  }
+
   showTableInformation(tableName: string): DB {
-    this.tableName = tableName;
-    this.connection.query(`DESC ${this.tableName}`, this.callback);
+    this.defaultTableName = tableName;
+    this.connection.query(`DESC ${this.defaultTableName}`, this.callback);
     return this;
   }
 
@@ -37,8 +50,11 @@ export default class DB {
    * @returns
    */
   showFieldInformation(fieldName: string, tableName?: string): DB {
-    if (!this.tableName && !tableName) throw new Error('Please provide table name');
-    this.connection.query(`DESC ${this.tableName} ${fieldName}`, this.callback);
+    if (!this.defaultTableName && !tableName) throw new Error('Please provide table name');
+    this.connection.query(
+      `DESC ${this.defaultTableName ? this.defaultTableName : tableName} ${fieldName}`,
+      this.callback
+    );
     return this;
   }
 }

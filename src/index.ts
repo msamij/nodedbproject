@@ -2,4 +2,4 @@ import DB from './db';
 import DBConnection from './dbConnection';
 
 const db = new DB(DBConnection.getConnectionInstance());
-db.listAllTables().showTableInformation('customer').showFieldInformation('age');
+db.showAllTables().showInformationFromAllTables().showFieldInformation('age', 'customer');
