@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ChangeEvent, useEffect, useState } from 'react';
+
+type JsonResponse = [
+  {
+    country_id: number;
+    country: string;
+    last_update: string;
+  }
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState<JsonResponse>([{ country_id: 0, country: '', last_update: '' }]);
+  const [countryInput, setCountryInput] = useState('');
+  const [countrySelect, setCountrySelect] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      let result = await fetch(`http://127.0.0.1:3000?country=${countryInput}`, {
+        method: 'GET',
+      });
+      const json: JsonResponse = await result.json();
+      setData(json);
+    })();
+  }, [countryInput]);
+
+  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => setCountryInput(event.target.value);
+
+  const onSelectChange = (event: ChangeEvent<HTMLSelectElement>) => setCountrySelect(event.target.value);
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <input type="text" onChange={onInputChange} placeholder="Enter Country Name:" />
+      <select onChange={onSelectChange}>
+        <option>Select Country</option>
+        {data.map(el => (
+          <option key={el.country_id}>{el.country}</option>
+        ))}
+      </select>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

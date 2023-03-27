@@ -23,7 +23,7 @@ export default class DBConnection {
       port: 3306,
       user: 'root',
       password: '84E4sC2G9g!',
-      database: 'node_project',
+      database: 'sakila',
     });
 
     this.connection.connect(err => {

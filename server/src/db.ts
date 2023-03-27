@@ -1,10 +1,13 @@
 import * as mysql from 'mysql2';
 import { RESULT_KEY } from './config';
+import express, { Application, Request, Response } from 'express';
 import DBConnection from './dbConnection';
 
 export default class DB {
   private defaultTableName: string = null;
   private connection: mysql.Connection;
+  private result: any[] = [];
+  private res: Response;
 
   /**
    * @param defaultTableName provide tableName during instantiation,
@@ -19,6 +22,18 @@ export default class DB {
   private callback(error: mysql.QueryError, result: any) {
     if (error) console.log(error);
     else console.log(result);
+  }
+
+  private getResultCallback(error: mysql.QueryError, result: any) {
+    if (error) console.log(error);
+    else {
+      this.result = result;
+      this.test(this.res);
+    }
+  }
+
+  private test(res: Response) {
+    res.send(this.result);
   }
 
   showAllTables(): DB {
@@ -56,5 +71,23 @@ export default class DB {
       this.callback
     );
     return this;
+  }
+
+  executeSelectTableStatement(tableName: string): DB {
+    this.connection.query(`SELECT * FROM ${tableName} LIMIT 10`, this.getResultCallback.bind(this));
+    return this;
+  }
+
+  executeSelectTableStatementBasedOnQueryParam(tableName: string, query: string, res: Response): DB {
+    this.res = res;
+    this.connection.query(
+      `SELECT * FROM ${tableName} WHERE country LIKE '${query}%'`,
+      this.getResultCallback.bind(this)
+    );
+    return this;
+  }
+
+  getResult() {
+    return this.result;
   }
 }
