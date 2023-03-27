@@ -17,8 +17,6 @@ app.use(cors(corsOptions));
 app.get('/', (req: Request, res: Response) => {
   const { country } = req.query;
   db.executeSelectTableStatementBasedOnQueryParam('country', country as string, res);
-  console.log(db.getResult());
-  // res.send('Hello, World');
 });
 
 app.listen(port, () => {
@@ -31,4 +29,9 @@ const db = new DB(DBConnection.getConnectionInstance());
 app.get('/db', (req: Request, res: Response) => {
   db.executeSelectTableStatement('city');
   res.json(db.getResult());
+});
+
+app.get('/city', (req: Request, res: Response) => {
+  const { country } = req.query;
+  db.executeSelectTableStatementForCity(country as string, res);
 });

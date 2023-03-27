@@ -87,6 +87,11 @@ export default class DB {
     return this;
   }
 
+  executeSelectTableStatementForCity(countryId: string, res: Response) {
+    this.res = res;
+    this.connection.query(`SELECT * FROM city WHERE country_id = ${countryId}`, this.getResultCallback.bind(this));
+  }
+
   getResult() {
     return this.result;
   }
