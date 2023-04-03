@@ -1,0 +1,30 @@
+.menu {
+  width: fit-content;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+}
+.menu table {
+  border-collapse: collapse;
+  background-color: aliceblue;
+  font-size: 1rem;
+}
+.menu thead {
+  border: 1px solid #dddddd;
+}
+.menu thead tr {
+  background-color: coral;
+}
+.menu :not(:first-child) tr:hover {
+  cursor: pointer;
+  background-color: #dddddd;
+}
+.menu th,
+.menu td {
+  padding: 1.8rem;
+  border: 1px solid #dddddd;
+}
+.menu td {
+  font-weight: 300;
+}

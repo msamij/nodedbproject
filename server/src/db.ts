@@ -1,6 +1,6 @@
+import { Response } from 'express';
 import * as mysql from 'mysql2';
 import { RESULT_KEY } from './config';
-import express, { Application, Request, Response } from 'express';
 import DBConnection from './dbConnection';
 
 export default class DB {
@@ -28,11 +28,11 @@ export default class DB {
     if (error) console.log(error);
     else {
       this.result = result;
-      this.test(this.res);
+      this.sendResponse(this.res);
     }
   }
 
-  private test(res: Response) {
+  private sendResponse(res: Response) {
     res.send(this.result);
   }
 
@@ -62,7 +62,6 @@ export default class DB {
   /**
    * @param tableName (optional) if not provided, default one will be used,
    * that's initialized during DB's instantiation.
-   * @returns
    */
   showFieldInformation(fieldName: string, tableName?: string): DB {
     if (!this.defaultTableName && !tableName) throw new Error('Please provide table name');
@@ -73,7 +72,8 @@ export default class DB {
     return this;
   }
 
-  executeSelectTableStatement(tableName: string): DB {
+  executeSelectTableStatement(tableName: string, res: Response): DB {
+    this.res = res;
     this.connection.query(`SELECT * FROM ${tableName} LIMIT 10`, this.getResultCallback.bind(this));
     return this;
   }

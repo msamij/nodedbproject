@@ -1,0 +1,33 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui;
+  font-size: 62.5%;
+  height: 100vh;
+  background-color: bisque;
+}
+
+#root {
+  height: 100%;
+  position: relative;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+select,
+button {
+  font-family: inherit;
+}

@@ -2,5 +2,5 @@
 server/node_modules
 server/dist
 
-client/.yarn
+client/dist
 client/node_modules
